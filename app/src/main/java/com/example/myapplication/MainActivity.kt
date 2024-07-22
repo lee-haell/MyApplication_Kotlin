@@ -48,6 +48,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun Greeting(name: String, modifier: Modifier) {
+    /**
+     * private 키워드는 접근 범위를 제한
+     * Greeting 함수는 동일한 파일 내에 다른 코드에서 호출될 수 있음
+     * 하지만 다른 파일에서 호출될 수 없음
+     */
     Surface(color = MaterialTheme.colorScheme.primary) {
         Text (text = "Hello $name!")
     }
@@ -57,7 +62,7 @@ private fun Greeting(name: String, modifier: Modifier) {
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        Greeting("Android", androidx.compose.ui.Modifier.Companion.padding(16.dp))
+        Greeting("Android", androidx.compose.ui.Modifier.Companion.padding(24.dp))
     }
 }
 
