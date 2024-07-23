@@ -7,8 +7,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -28,43 +33,58 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "user",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-
+                MyApp(modifier = Modifier.fillMaxSize())
             }
         }
     }
 }
 
+/**
+ * 재사용 가능한 MyApp 함수 생성
+ */
+@Composable
+fun MyApp(
+    modifier: Modifier = Modifier,
+    names: List<String> = listOf("World", "Compose")
+) {
+    Column(modifier = modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {
+        for (name in names) {
+            Greeting(name = name)
+        }
+    }
+}
 
-//@Composable
-//fun Greeting(name: String, modifier: Modifier) {
-//    Text(text = "Hello $name!")
-//}
 
 @Composable
-private fun Greeting(name: String, modifier: Modifier) {
+fun Greeting(name: String, modifier: Modifier = Modifier) {
     /**
      * private 키워드는 접근 범위를 제한
      * Greeting 함수는 동일한 파일 내에 다른 코드에서 호출될 수 있음
      * 하지만 다른 파일에서 호출될 수 없음
      */
-    Surface(color = MaterialTheme.colorScheme.primary) {
-        Text (text = "Hello $name!")
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier.padding(10.dp, 5.dp, 10.dp, 5.dp) //감싸는 요소에 대한 padding
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth() //최대 가로 크기
+        ) {
+        Column(modifier = modifier.padding(24.dp)){ //text 영역에 대한 padding
+            Text("Hello,")
+            Text("$name!")
+        }
+        }
     }
 }
 
-@Preview(showSystemUi = true)
+/**
+ * 미리보기
+ */
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        Greeting("Android", androidx.compose.ui.Modifier.Companion.padding(24.dp))
+        MyApp()
     }
 }
-
-
-
