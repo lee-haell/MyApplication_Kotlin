@@ -27,6 +27,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,6 +66,12 @@ fun MyApp(
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
+    /**
+     * 리멤버 함수는 컴포즈에서 상태 보존, 컴포즈가 추적할 때마다 해당 상태를 사용할 수 있음
+     * 이를 리컴포지션이라고 한다.
+     */
+    val expanded = remember {mutableStateOf(false)}
+    val buttonPadding = if (expanded.value) 48.dp else 0.dp
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
@@ -74,14 +82,18 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(24.dp)
         )
         {
-            Column(modifier = Modifier.weight(f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = buttonPadding)
+            ) {
                 Text("Hello,")
                 Text("$name!")
             }
                 ElevatedButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {expanded.value = !expanded.value}, //버튼을 클릭할 때 상태 반전
                 ) {
-                    Text("Show more")
+                    Text(if (expanded.value) "Show less" else "Show more")
                 }
         }
     }
