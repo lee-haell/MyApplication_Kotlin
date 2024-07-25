@@ -53,13 +53,31 @@ class MainActivity : ComponentActivity() {
 }
 
 
+//상위 컴포저블 - 다른 화면 표시하는 로직 추가 및 상태 호이스팅
+@Composable
+fun MyApp(modifier: Modifier = Modifier) {
+    //상태를 MyApp에서 관리
+    var shouldShowOnboarding by remember { mutableStateOf(true) }
+
+    //상태에 따라 UI를 분기
+    Surface(modifier) {
+        if(shouldShowOnboarding){
+            OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
+        } else {
+            Greetings()
+        }
+    }
+}
+
+
 /**
  * 온보딩 화면
  */
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier){
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
-
+fun OnboardingScreen(
+    onContinueClicked: () -> Unit,
+    modifier: Modifier = Modifier
+){
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -68,18 +86,13 @@ fun OnboardingScreen(modifier: Modifier = Modifier){
         Text("Welcome to the Basics Codelab!")
         Button(
             modifier = modifier.padding(vertical = 24.dp),
-            onClick = {shouldShowOnboarding = false}
+            onClick = onContinueClicked
         ){
             Text("Continue")
         }
     }
 }
 
-
-@Composable
-fun MyApp(modifier: Modifier = Modifier) {
-    Greetings()
-}
 
 @Composable
 private fun Greetings(
@@ -90,6 +103,15 @@ private fun Greetings(
         for (name in names) {
             Greeting(name = name)
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun OnboardingPreview() {
+    MyApplicationTheme {
+        OnboardingScreen(onContinueClicked = {})
     }
 }
 
@@ -129,27 +151,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun OnboardingPreview() {
-    MyApplicationTheme {
-        OnboardingScreen()
-    }
-}
-
-//@Preview(showSystemUi = true, showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    MyApplicationTheme {
-//        MyApp()
-//    }
-//}
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun GreetingsPreview(){
+fun GreetingPreview() {
     MyApplicationTheme {
         Greetings()
     }
 }
 
+
+//컴포저블 이동 미리보기로 확인
+@Preview(showSystemUi = true)
+@Composable
+fun MyAppPreview(){
+    MyApplicationTheme {
+        MyApp()
+    }
+}
