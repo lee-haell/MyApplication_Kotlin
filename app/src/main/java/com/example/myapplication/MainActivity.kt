@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(modifier: Modifier = Modifier) {
     //상태를 MyApp에서 관리
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
 
     //상태에 따라 UI를 분기
     Surface(modifier) {
@@ -99,14 +100,8 @@ fun OnboardingScreen(
 @Composable
 private fun Greetings(
     modifier: Modifier = Modifier,
-//    names: List<String> = listOf("First Memo", "Second Memo"))
     names: List<String> = List(1000){"$it"}
 ) {
-//    Column(modifier = modifier.padding(vertical = 4.dp)) {
-//        for (name in names) {
-//            Greeting(name = name)
-//        }
-//    }
     LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
         items(items = names){ name ->
             Greeting(name = name)
@@ -130,7 +125,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
      * 리멤버 함수는 컴포즈에서 상태 보존, 컴포즈가 추적할 때마다 해당 상태를 사용할 수 있음
      * 이를 리컴포지션이라고 한다.
      */
-    val expanded = remember {mutableStateOf(false)}
+    val expanded = rememberSaveable {mutableStateOf(false)}
     val buttonPadding = if (expanded.value) 48.dp else 0.dp
     Surface(
         color = MaterialTheme.colorScheme.primary,
