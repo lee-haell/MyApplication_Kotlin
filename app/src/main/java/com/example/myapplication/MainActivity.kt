@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -97,10 +99,16 @@ fun OnboardingScreen(
 @Composable
 private fun Greetings(
     modifier: Modifier = Modifier,
-    names: List<String> = listOf("First Memo", "Second Memo"))
-{
-    Column(modifier = modifier.padding(vertical = 4.dp)) {
-        for (name in names) {
+//    names: List<String> = listOf("First Memo", "Second Memo"))
+    names: List<String> = List(1000){"$it"}
+) {
+//    Column(modifier = modifier.padding(vertical = 4.dp)) {
+//        for (name in names) {
+//            Greeting(name = name)
+//        }
+//    }
+    LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
+        items(items = names){ name ->
             Greeting(name = name)
         }
     }
