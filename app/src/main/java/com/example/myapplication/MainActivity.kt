@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -120,35 +121,37 @@ fun OnboardingPreview() {
 
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+private fun Greeting(name: String, modifier: Modifier = Modifier) {
     /**
      * 리멤버 함수는 컴포즈에서 상태 보존, 컴포즈가 추적할 때마다 해당 상태를 사용할 수 있음
      * 이를 리컴포지션이라고 한다.
      */
-    val expanded = rememberSaveable {mutableStateOf(false)}
-    val buttonPadding = if (expanded.value) 48.dp else 0.dp
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val extraPadding by animateDpAsState(
+        if (expanded) 48.dp else 0.dp
+    )
+//    val buttonPadding = if (expanded.value) 48.dp else 0.dp
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-    )
-    {
+    ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+//            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.padding(24.dp)
         )
         {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(bottom = buttonPadding)
+                    .padding(bottom = extraPadding)
             ) {
                 Text("Hello,")
                 Text("$name!")
             }
                 ElevatedButton(
-                    onClick = {expanded.value = !expanded.value}, //버튼을 클릭할 때 상태 반전
+                    onClick = { expanded = !expanded }, //버튼을 클릭할 때 상태 반전
                 ) {
-                    Text(if (expanded.value) "Show less" else "Show more")
+                    Text(if (expanded) "Show less" else "Show more")
                 }
         }
     }
