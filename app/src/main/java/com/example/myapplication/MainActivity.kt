@@ -3,49 +3,50 @@
  */
 package com.example.myapplication
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialogDefaults.shape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons.Filled
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DividerDefaults.color
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.coerceAtLeast
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 
 
 
@@ -128,41 +129,55 @@ fun OnboardingPreview() {
 
 @Composable
 private fun Greeting(name: String, modifier: Modifier = Modifier) {
-    /**
-     * 리멤버 함수는 컴포즈에서 상태 보존, 컴포즈가 추적할 때마다 해당 상태를 사용할 수 있음
-     * 이를 리컴포지션이라고 한다.
-     */
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    val extraPadding by animateDpAsState(
-        if (expanded) 48.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        )
-    )
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
+    Card(
+        colors = CardDefaults.cardColors( //card 컴포저블의 색상 재정의
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(24.dp)
-        )
-        {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(bottom = extraPadding.coerceAtLeast(0.dp))
-            ) {
-                Text("Hello,")
-                Text(text = name, style = MaterialTheme.typography.headlineMedium.copy(
+    ){
+        CardContent(name)
+    }
+}
+
+
+@Composable
+private fun CardContent(name: String) {
+    var expanded by rememberSaveable { mutableStateOf(false) } //초기값 초기화
+
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .padding(24.dp)
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
+        ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text("Hello,")
+            Text(
+                text = name, style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.ExtraBold
-                ))
+                )
+            )
+            if (expanded) {
+                Text(
+                    text = ("Composem ipsum color sit lazy, " +
+                            "padding theme elit, sed do bouncy. ").repeat(4),
+                )
             }
-                ElevatedButton(
-                    onClick = { expanded = !expanded }, //버튼을 클릭할 때 상태 반전
-                ) {
-                    Text(if (expanded) "Show less" else "Show more")
-                }
+        }
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(
+                imageVector = if (expanded) Filled.ExpandLess else Filled.ExpandMore,
+                contentDescription = if (expanded) {
+                    stringResource(R.string.show_less)
+                } else {
+                    stringResource(R.string.show_more)
+                },
+            )
         }
     }
 }
@@ -174,7 +189,7 @@ private fun Greeting(name: String, modifier: Modifier = Modifier) {
     uiMode = UI_MODE_NIGHT_YES,
     name = "GreetingPreviewDark"
 )
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
@@ -183,7 +198,7 @@ fun GreetingPreview() {
 }
 
 
-//컴포저블 이동 미리보기로 확인
+//컴포저블 이동 미리보기 확인용
 @Preview(showSystemUi = true)
 @Composable
 fun MyAppPreview(){
