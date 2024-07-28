@@ -43,7 +43,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.coerceAtLeast
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+
 
 
 class MainActivity : ComponentActivity() {
@@ -52,7 +55,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                MyApp()
+                MyApp(modifier = Modifier.fillMaxSize())
             }
         }
     }
@@ -151,7 +154,9 @@ private fun Greeting(name: String, modifier: Modifier = Modifier) {
                     .padding(bottom = extraPadding.coerceAtLeast(0.dp))
             ) {
                 Text("Hello,")
-                Text("$name!")
+                Text(text = name, style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.ExtraBold
+                ))
             }
                 ElevatedButton(
                     onClick = { expanded = !expanded }, //버튼을 클릭할 때 상태 반전
@@ -163,7 +168,13 @@ private fun Greeting(name: String, modifier: Modifier = Modifier) {
 }
 
 
-@Preview(showSystemUi = true, showBackground = true)
+@Preview(
+    showSystemUi = true,
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "GreetingPreviewDark"
+)
+@Preview
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
